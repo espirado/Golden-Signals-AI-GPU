@@ -1,0 +1,44 @@
+cff-version: 1.2.0
+message: >-
+  If you use this repository or the accompanying papers, please cite both
+  the research paper and this artifact.
+type: software
+title: >-
+  Golden Signals for AI Workloads on Shared GPU Clusters
+  (research artifact repository)
+abstract: >-
+  Reproducible research artifact for the "five golden signals for AI
+  workloads" paper: five SLIs (Queue-of-Work Reliability, GPU-Compute
+  Effectiveness, HBM-Pressure Headroom, Straggler Amplification Index,
+  Output-Quality Calibration), their SLO templates, and empirical
+  validation across four heterogeneous GPU-cluster environments.
+version: 0.1.0-draft
+date-released: "2026-07-07"
+license: MIT
+authors:
+  - family-names: Espira
+    given-names: Andrew
+    orcid: "https://orcid.org/0009-0002-9196-8094"
+    affiliation: Saint Peter's University
+    email: aespira@saintpeters.edu
+  - family-names: Kumar
+    given-names: Sharath
+    affiliation: Saint Peter's University
+    email: skumar@saintpeters.edu
+keywords:
+  - SRE
+  - golden signals
+  - GPU clusters
+  - AI workloads
+  - Kubernetes
+  - Slurm
+  - DCGM telemetry
+  - probability calibration
+  - Expected Calibration Error
+  - Service Level Objectives
+  - burn-rate alerts
+  - observability
+identifiers:
+  - type: url
+    value: "https://github.com/espirado/PLACEHOLDER-golden-signals"
+    description: "GitHub repository (to be created)"

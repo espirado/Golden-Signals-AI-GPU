@@ -1,0 +1,52 @@
+% Placeholder for the practitioner article (SREcon extended abstract,
+% USENIX ;login: article, or ACM Queue). Length target: 3-6 pages.
+
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{hyperref}
+
+\title{Five Golden Signals for AI Workloads on GPU Clusters\\
+(a practitioner article, draft)}
+\author{Andrew Espira \and Sharath Kumar}
+\date{Draft --- \today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+The four golden signals travel poorly to AI workloads on shared GPU
+clusters. GPU utilization is a lying metric, HTTP errors miss silent
+quality regressions, request latency misses queue wait and token tails,
+and QPS is undefined for training. We propose five golden signals SREs
+can start monitoring today, each with a copy-pasteable SLO template.
+\end{abstract}
+
+\section{The problem}
+\emph{TODO. Two-paragraph intro. Golden signals worked for stateless
+services; not for AI on GPUs.}
+
+\section{Why classical four break --- one paragraph per signal}
+\emph{TODO. See \texttt{docs/CRITIQUE.md}.}
+
+\section{Five signals to monitor today}
+\emph{TODO. Each signal capped at one page: definition,
+what-to-alert-on, what-NOT-to-alert-on. See
+\texttt{docs/SIGNALS\_TAXONOMY.md}.}
+
+\section{SLO templates you can copy}
+\emph{TODO. Prometheus / OpenTelemetry snippets from
+\texttt{docs/SLO\_TEMPLATES.md}.}
+
+\section{A short case study}
+\emph{TODO. One failure mode from each of the four environments.}
+
+\section{Open questions}
+\emph{TODO. Honest list of what we don't know yet.}
+
+\section*{Acknowledgments}
+Framing conversations with Salim Virji (Google) and Max Saltonstall
+(Datadog).
+
+\end{document}

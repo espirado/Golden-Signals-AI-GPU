@@ -1,0 +1,104 @@
+% Placeholder LaTeX skeleton for the deep research paper.
+% Choose the final template (acmart / IEEEtran / usenix) after venue is decided.
+% Current draft targets a venue-agnostic 12-page article layout.
+
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\hypersetup{
+  pdftitle={Golden Signals for AI Workloads on Shared GPU Clusters},
+  pdfauthor={Andrew Espira and Sharath Kumar},
+  colorlinks=true,linkcolor=blue,urlcolor=blue,citecolor=blue
+}
+
+\title{Beyond the Four Golden Signals:\\
+Observability Primitives for AI Workloads on Shared GPU Clusters}
+\author{Andrew Espira \and Sharath Kumar\\
+Department of Data Science, Saint Peter's University}
+\date{Draft --- \today}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+The four golden signals of monitoring --- latency, traffic, errors, and
+saturation --- were codified for stateless request/response services.
+When AI training and inference are placed on shared GPU clusters, each of
+the four either loses precision or actively misleads: GPU utilization is a
+well-documented lying signal, HTTP-style errors miss silent quality
+regressions, request latency does not capture queue wait or token-level
+tails, and QPS is undefined for training. We propose five golden signals
+tailored to AI GPU workloads --- \emph{Queue-of-Work Reliability},
+\emph{GPU-Compute Effectiveness}, \emph{HBM-Pressure Headroom},
+\emph{Straggler Amplification Index}, and \emph{Output-Quality
+Calibration} --- each defined precisely, each with an SLO template and a
+burn-rate multi-window alert, and each validated on measured data from
+four heterogeneous environments (Amazon EKS, AWS ParallelCluster Slurm,
+Alibaba GPU trace v2020/2023, Google Borg 2019). We show the five signals
+are mutually informative rather than redundant and that they are cheaply
+computable from telemetry a well-instrumented cluster already emits.
+\end{abstract}
+
+\section{Introduction}\label{sec:intro}
+\emph{TODO. Motivating example: an EKS cluster with 100\% \texttt{util\%}
+and healthy p99 HTTP latency is silently dropping 22\% goodput to
+stragglers. Contribution list.}
+
+\section{Background}\label{sec:bg}
+\emph{TODO. Golden signals lineage (SRE Book, SRE Workbook, Implementing
+SLOs). Assumptions of the classical four and where they break for GPU AI
+workloads (\S~\ref{sec:critique}).}
+
+\section{Why the classical four travel poorly}\label{sec:critique}
+\emph{TODO. See \texttt{docs/CRITIQUE.md} for the full argument to be
+lifted into this section.}
+
+\section{Five golden signals, defined}\label{sec:signals}
+\emph{TODO. See \texttt{docs/SIGNALS\_TAXONOMY.md} for the taxonomy.
+Each subsection covers one signal.}
+
+\subsection{Queue-of-Work Reliability (QWR)}\label{sec:qwr}
+\subsection{GPU-Compute Effectiveness (GCE)}\label{sec:gce}
+\subsection{HBM-Pressure Headroom (HPH)}\label{sec:hph}
+\subsection{Straggler Amplification Index (SAI)}\label{sec:sai}
+\subsection{Output-Quality Calibration (OQC)}\label{sec:oqc}
+
+\section{Data and measurement protocol}\label{sec:data}
+\emph{TODO. Four environments; per-signal extraction recipe cross-linked
+to \texttt{code/}.}
+
+\section{Empirical validation}\label{sec:results}
+\emph{TODO. Per-signal behavior across four environments;
+cross-signal correlation table; failure-mode case studies;
+alert-simulation comparison to classical golden-signal alerts.}
+
+\section{Operational integration}\label{sec:ops}
+\emph{TODO. SLO templates, tier-qualification tie-in, calibration monitor
+as a shared sub-component of three of the five signals.}
+
+\section{Discussion and Limitations}\label{sec:disc}
+\emph{TODO.}
+
+\section{Related Work}\label{sec:rw}
+\emph{TODO. See \texttt{docs/RELATED\_WORK.md}.}
+
+\section{Conclusion}\label{sec:conc}
+\emph{TODO.}
+
+\section*{Use of AI Assistance}
+Draft text of this paper was edited with the help of a large language model
+(Anthropic Claude). All results, tables, figures, methodological choices,
+and interpretations were authored and verified by the human authors; the
+LLM did not generate experimental results.
+
+\section*{Acknowledgments}
+The framing of this work was developed in a conversation with Salim Virji
+(Google SRE, contributor to \emph{The Site Reliability Workbook} and
+\emph{Implementing Service Level Objectives}) and Max Saltonstall
+(Datadog Developer Advocate). We thank the Saint Peter's University
+Department of Data Science for infrastructure and guidance.
+
+\end{document}
