@@ -3,8 +3,8 @@
 ## SRE lineage (essential context)
 
 - **B. Beyer et al.**, *Site Reliability Engineering* (O'Reilly, 2016). Chapter 6 codifies the four golden signals. This paper's contribution is best framed as *"the AI-workload equivalent of Chapter 6"*.
-- **B. Beyer, N. Murphy et al.**, *The Site Reliability Workbook* (O'Reilly, 2018). Salim Virji is a contributor; useful for practical CUJ / SLI worked examples.
-- **A. Hidalgo et al.**, *Implementing Service Level Objectives* (O'Reilly, 2020). Salim Virji is also a contributor. Multi-window burn-rate alerts and error-budget policies. All SLO templates in `docs/SLO_TEMPLATES.md` follow this book's conventions.
+- **B. Beyer, N. Murphy et al.**, *The Site Reliability Workbook* (O'Reilly, 2018). Useful for practical CUJ / SLI worked examples.
+- **A. Hidalgo et al.**, *Implementing Service Level Objectives* (O'Reilly, 2020). Multi-window burn-rate alerts and error-budget policies. All SLO templates in `docs/SLO_TEMPLATES.md` follow this book's conventions.
 - **Rothenberg & Chevalier**, *Learning Multi-window Burn Rate Alerts.* Google SRE blog / whitepaper.
 
 ## GPU cluster telemetry (measurement priors)

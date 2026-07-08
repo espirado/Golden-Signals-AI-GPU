@@ -1,12 +1,14 @@
-# Conversation Notes — Salim Virji (Google SRE) & Max Saltonstall (Datadog)
+# Conversation Notes — Google SRE Discussion
 
 **Date.** Weeks before this repo was created (spring/early summer 2026).
-**Context.** Google SRE discussion on monitoring AI workloads in large production deployments. The specific talk cited: **"Monitoring AI workloads in large production deployments"** (Salim Virji, Max Saltonstall).
+**Context.** Google SRE discussion on monitoring AI workloads in large production deployments. The specific talk cited: **"Monitoring AI workloads in large production deployments."**
 
-**Speaker bios (for the acknowledgments section of the paper).**
+**Speaker bios (for the acknowledgments section of the paper, pending approval).**
 
-- **Salim Virji** — Site Reliability Engineer at Google. Contributor to *The Site Reliability Workbook* (O'Reilly, 2018) and *Implementing Service Level Objectives* (O'Reilly, 2020). Research interests include distributed systems and machine learning.
-- **Max Saltonstall** — Developer Advocate on Datadog's Advocacy team, previously at Google Cloud where he built and told stories about cloud infrastructure.
+- **Google SRE contact** — Site Reliability Engineer at Google. Contributor to *The Site Reliability Workbook* (O'Reilly, 2018) and *Implementing Service Level Objectives* (O'Reilly, 2020). Research interests include distributed systems and machine learning.
+- **Datadog contact** — Developer Advocate on Datadog's Advocacy team, previously at Google Cloud where he built and told stories about cloud infrastructure.
+
+*Names to be added once each individual confirms they're comfortable being credited.*
 
 ## Framing the conversation established
 
@@ -43,9 +45,9 @@
 
 ## How to acknowledge in the final paper
 
-Suggested language for the Acknowledgments section, subject to Salim's and Max's approval before submission:
+Suggested language for the Acknowledgments section, subject to approval from both individuals before submission — names to be inserted once confirmed:
 
-> We thank Salim Virji (Google) and Max Saltonstall (Datadog) for a
+> We thank [Google SRE contact] and [Datadog contact] for a
 > conversation that crystallized the framing of this work — that AI
 > workloads on shared GPU clusters currently lack a widely-accepted
 > golden-signal set, and that codifying one is a first-class SRE

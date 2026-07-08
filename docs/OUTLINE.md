@@ -47,7 +47,7 @@ Both drafts share a single evidence base. Where a section number below is prefix
 
 **R9. Conclusion.**
 
-**R10. AI-usage disclosure + Acknowledgments** (crediting Salim Virji and Max Saltonstall for the framing conversation, subject to their approval).
+**R10. AI-usage disclosure + Acknowledgments** (crediting the Google SRE and Datadog contacts for the framing conversation, subject to their approval; names to be added once confirmed).
 
 ## Practitioner article (`tex/practitioner/`) — target 3–6 pp
 

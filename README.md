@@ -20,7 +20,7 @@ The four **[golden signals of monitoring](https://sre.google/sre-book/monitoring
 - **Errors** rarely surface as HTTP-style status codes. A silently miscalibrated model, a corrupted gradient reduction, or a job that produces a valid-looking but low-quality output all fail the classical "errors" definition.
 - **Saturation** as GPU utilization is a well-known [lying metric](https://arthurchiao.art/blog/understanding-gpu-performance/): a card can be 100% "utilized" while spending most of its time on memory-bound operations, throttling on temperature, or waiting on NCCL stragglers. HBM saturation, compute-vs-memory-bound state, and inter-node collective-op tail latency are the operationally meaningful signals, and none of them are captured by `nvidia-smi util%`.
 
-The conversation with **Salim Virji** (Google SRE, contributor to *The Site Reliability Workbook* and *Implementing Service Level Objectives*) and **Max Saltonstall** (Datadog Developer Advocate) framed this as a first-class SRE problem: *there is currently no accepted golden-signal set for AI GPU workloads, and every large operator is inventing an incomplete one.*
+A conversation at Google SRE framed this as a first-class SRE problem: *there is currently no accepted golden-signal set for AI GPU workloads, and every large operator is inventing an incomplete one.*
 
 ## Our contribution
 
@@ -52,7 +52,7 @@ golden_signals_repo/
 │   ├── SIGNALS_TAXONOMY.md                the five signals, defined and evidenced
 │   ├── CRITIQUE.md                        why the classical four signals fail for AI
 │   ├── SLO_TEMPLATES.md                   SLI/SLO/alert templates operators can copy
-│   ├── CONVERSATION_NOTES.md              notes from the Salim + Max conversation
+│   ├── CONVERSATION_NOTES.md              notes from the Google SRE framing conversation
 │   └── RELATED_WORK.md                    SRE-book lineage; MLSys observability
 ├── tex/
 │   ├── research/                          full research paper (draft in progress)
@@ -93,4 +93,4 @@ Currently: scaffolded, outline drafted, related work list assembled. Next steps:
 - Andrew Espira, Saint Peter's University — [ORCID 0009-0002-9196-8094](https://orcid.org/0009-0002-9196-8094)
 - Sharath Kumar, Saint Peter's University
 
-**Conversation credit.** The framing of this paper — that AI workloads on shared GPU clusters lack a widely-accepted golden-signal set and that SRE practice is currently inventing incomplete ones — was developed in a Google SRE discussion with **Salim Virji** (Google SRE) and **Max Saltonstall** (Datadog Developer Advocate). Any use of that framing in the final paper will be acknowledged accordingly.
+**Conversation credit.** The framing of this paper — that AI workloads on shared GPU clusters lack a widely-accepted golden-signal set and that SRE practice is currently inventing incomplete ones — was developed in a conversation at Google SRE. Names will be added here once the individuals involved agree to be credited.
