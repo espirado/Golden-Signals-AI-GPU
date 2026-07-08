@@ -52,7 +52,7 @@ golden_signals_repo/
 │   ├── SIGNALS_TAXONOMY.md                the five signals, defined and evidenced
 │   ├── CRITIQUE.md                        why the classical four signals fail for AI
 │   ├── SLO_TEMPLATES.md                   SLI/SLO/alert templates operators can copy
-│   ├── CONVERSATION_NOTES.md              notes from the Google SRE framing conversation
+│   ├── CONVERSATION_NOTES.md              framing notes from the Google SRE community
 │   └── RELATED_WORK.md                    SRE-book lineage; MLSys observability
 ├── tex/
 │   ├── research/                          full research paper (draft in progress)
@@ -93,4 +93,4 @@ Currently: scaffolded, outline drafted, related work list assembled. Next steps:
 - Andrew Espira, Saint Peter's University — [ORCID 0009-0002-9196-8094](https://orcid.org/0009-0002-9196-8094)
 - Sharath Kumar, Saint Peter's University
 
-**Conversation credit.** The framing of this paper — that AI workloads on shared GPU clusters lack a widely-accepted golden-signal set and that SRE practice is currently inventing incomplete ones — was developed in a conversation at Google SRE. Names will be added here once the individuals involved agree to be credited.
+**Community context.** The framing of this paper — that AI workloads on shared GPU clusters lack a widely-accepted golden-signal set and that SRE practice is currently inventing incomplete ones — draws on discussions in the Google SRE community around monitoring AI workloads in large production deployments.

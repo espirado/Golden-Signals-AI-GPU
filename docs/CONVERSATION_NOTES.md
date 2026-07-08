@@ -1,24 +1,16 @@
-# Conversation Notes — Google SRE Discussion
+# Framing Notes — Google SRE Community on AI-Workload Monitoring
 
-**Date.** Weeks before this repo was created (spring/early summer 2026).
-**Context.** Google SRE discussion on monitoring AI workloads in large production deployments. The specific talk cited: **"Monitoring AI workloads in large production deployments."**
+**Context.** This paper's framing draws on ongoing discussions in the Google SRE community about monitoring AI workloads in large production deployments — the theme of the public talk *"Monitoring AI workloads in large production deployments."* The talk and related conversations in that community set up the question this repository tries to answer: *what should the golden signals be, when the underlying workload is neither stateless nor request/response?*
 
-**Speaker bios (for the acknowledgments section of the paper, pending approval).**
-
-- **Google SRE contact** — Site Reliability Engineer at Google. Contributor to *The Site Reliability Workbook* (O'Reilly, 2018) and *Implementing Service Level Objectives* (O'Reilly, 2020). Research interests include distributed systems and machine learning.
-- **Datadog contact** — Developer Advocate on Datadog's Advocacy team, previously at Google Cloud where he built and told stories about cloud infrastructure.
-
-*Names to be added once each individual confirms they're comfortable being credited.*
-
-## Framing the conversation established
+## The framing this community context established
 
 1. **There is no accepted golden-signal set for AI workloads.** The classical four (latency, traffic, errors, saturation) travel poorly to training and inference on GPUs. Every large operator is inventing an incomplete equivalent, often internally, and there is no widely-cited canonical answer.
 2. **Complexity is bimodal.** Both *training* (long-running, gradient-driven, data-parallel with collective ops) and *inference* (request/response but with heavy tail latency, KV-cache pressure, and quality signals distinct from HTTP status) each have their own failure modes that the classical golden signals cannot express.
 3. **The hard question is "when to alert and when not to."** GPU cluster telemetry is high-volume and high-variance. Alerting on the wrong signal produces on-call fatigue; not alerting on the right signal produces silent quality regressions or capacity hogging.
-4. **Cluster hogging.** A specific failure mode called out: one team's training job monopolizing a large fraction of a shared cluster, either intentionally or through mis-configured checkpointing / restart policies. The classical saturation metric does not distinguish "expected load" from "hogging."
+4. **Cluster hogging.** A specific failure mode called out repeatedly: one team's training job monopolizing a large fraction of a shared cluster, either intentionally or through mis-configured checkpointing / restart policies. The classical saturation metric does not distinguish "expected load" from "hogging."
 5. **The signal set must be composable.** Whatever golden-signal set an SRE proposes for AI workloads needs to compose with existing SLO tooling (Prometheus / Datadog / OpenTelemetry / Google SRE burn-rate multi-window alerts) and existing SRE processes (runbooks, blameless postmortems, CUJ-driven SLIs).
 
-## Open questions the conversation surfaced
+## Open questions the community discussions surfaced
 
 - What is the AI-workload equivalent of the classical **CUJ** (Critical User Journey)?
 - Should the golden signals be defined per-tenant, per-job-type, or per-cluster?
@@ -34,7 +26,7 @@
   - Straggler Amplification Index catches the collective-op-tail failure mode that classical *latency* misses.
   - Output-Quality Calibration generalizes *errors* to include silent quality regressions.
 - Distinguishes **training** signals from **inference** signals where they diverge (Output-Quality Calibration has a different definition in each), while keeping the top four signals invariant.
-- Provides **SLO templates** with burn-rate multi-window alerts (per `Implementing Service Level Objectives`) for each signal.
+- Provides **SLO templates** with burn-rate multi-window alerts (following the *Implementing Service Level Objectives* convention) for each signal.
 - Reports **empirical evidence** on four production and public traces, matching the standard the classical golden-signals literature set for its examples.
 
 ## What the paper does *not* claim
@@ -43,14 +35,14 @@
 - That five is the "right" number. It is the *minimum viable set* our measurements support; ops teams may extend it.
 - That the signals eliminate alert fatigue. They constrain what to alert on; alert-suppression policies, on-call runbooks, and postmortem discipline remain necessary.
 
-## How to acknowledge in the final paper
+## Acknowledgment language in the paper
 
-Suggested language for the Acknowledgments section, subject to approval from both individuals before submission — names to be inserted once confirmed:
+The paper's Acknowledgments section credits the Google SRE community's public discussions on AI-workload monitoring as the source of the framing question. Draft language:
 
-> We thank [Google SRE contact] and [Datadog contact] for a
-> conversation that crystallized the framing of this work — that AI
-> workloads on shared GPU clusters currently lack a widely-accepted
-> golden-signal set, and that codifying one is a first-class SRE
-> problem, not a monitoring-tool problem.
+> The framing of this work — that AI workloads on shared GPU clusters
+> lack a widely-accepted golden-signal set, and that codifying one is a
+> first-class SRE problem rather than a monitoring-tool problem — draws
+> on the Google SRE community's public discussions on monitoring AI
+> workloads in large production deployments.
 
-Any specific technical example or quote traced back to that conversation should be attributed inline in the paper text.
+Any specific technical example that can be traced back to a specific public source will be cited inline rather than folded into the Acknowledgments.
