@@ -4,7 +4,7 @@ Both drafts share a single evidence base. Where a section number below is prefix
 
 ## Research paper (`tex/research/`) — target 10–14 pp
 
-**R1. Introduction.** Golden signals travel poorly to AI GPU workloads. Motivating example must be labeled: 15–25% goodput loss to stragglers is **industry/literature**, not a measurement from this trace. Contribution list: five *candidate* signals + QWR measurement + SLO templates. Do not claim empirical validation of all five.
+**R1. Introduction.** Golden signals travel poorly to AI GPU workloads. Motivating example: goodput loss to stragglers is a known industry concern (cite specific source when drafting prose). Contribution list: five *candidate* signals + QWR measurement + SLO templates. Do not claim empirical validation of all five.
 
 **R2. Background.**
 - R2.1 Classical four golden signals (Beyer et al., *SRE Book* ch.6) and their assumptions (stateless service, request/response).

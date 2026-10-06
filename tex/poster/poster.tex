@@ -4,8 +4,7 @@
 %
 % Numbers: held-out Slurm split and live VGAC model card only.
 % Tier ladder: T1 Annotate (ECE<0.10), T2 Warn (<0.07),
-%              T3 Suggest (<0.05), T4 Gate (<0.03)
-%              per tier_qualification.png panel (b).
+%              T3 Suggest (<0.05), T4 Gate (<0.03).
 
 \documentclass[12pt]{article}
 
@@ -46,7 +45,6 @@
 \setlength{\colw}{0.318\textwidth}
 \newcommand{\gutterh}{\hspace{0.023\textwidth}}
 
-% ~1.6x scale from previous draft
 \newcommand{\kicker}[1]{%
   {\fontsize{18}{22}\selectfont\bfseries\color{pytorch}\MakeUppercase{#1}\par}\vspace{0.08in}}
 \newcommand{\sectionhead}[1]{%
@@ -58,47 +56,48 @@
 \begin{document}
 \pagecolor{white}
 \color{ink}
+\raggedright
 
 % ── Header ──────────────────────────────────────────────────────────
 \begin{tikzpicture}[remember picture,overlay]
-  \fill[navy] (current page.north west) rectangle ([yshift=-3.0in]current page.north east);
-  \fill[pytorch] (current page.north west) ++(0,-3.0in) rectangle ([yshift=-3.14in]current page.north east);
+  \fill[navy] (current page.north west) rectangle ([yshift=-3.7in]current page.north east);
+  \fill[pytorch] (current page.north west) ++(0,-3.7in) rectangle ([yshift=-3.84in]current page.north east);
 \end{tikzpicture}
 
 \vspace*{-0.05in}
-\begin{minipage}[t]{0.78\textwidth}
+\begin{minipage}[t]{0.76\textwidth}
   {\fontsize{18}{22}\selectfont\color{sand}\bfseries
     PYTORCH CONFERENCE NORTH AMERICA 2026 \quad$\cdot$\quad
-    COMMUNITY EXPO \quad$\cdot$\quad TUE 20 OCT 6:00--7:30 PM}\\[0.22in]
-  {\fontsize{58}{64}\selectfont\bfseries\color{white}What Should SRE Watch?}\\[0.12in]
-  {\fontsize{30}{36}\selectfont\color{sand}Calibration-Gated Decisions and the Missing\\Golden Signals for GPU Clusters}\\[0.22in]
-  {\fontsize{24}{30}\selectfont\color{white}
+    COMMUNITY EXPO \quad$\cdot$\quad TUE 20 OCT 6:00--7:30 PM}\\[0.26in]
+  {\fontsize{72}{78}\selectfont\bfseries\color{white}What Should SRE Watch?}\\[0.14in]
+  {\fontsize{32}{38}\selectfont\color{sand}Calibration-Gated Decisions and the Missing\\Golden Signals for GPU Clusters}\\[0.30in]
+  {\fontsize{26}{32}\selectfont\color{white}
     Andrew Espira \quad$\cdot$\quad Saint Peter's University \quad$\cdot$\quad
     \href{https://demo.vgac.cloud/}{\color{white}demo.vgac.cloud}}
 \end{minipage}%
 \hfill
-\begin{minipage}[t]{2.4in}
-  \vspace{0.04in}
+\begin{minipage}[t]{2.6in}
+  \vspace{0.20in}
   \begin{tikzpicture}
-    \fill[white] (0,0) rectangle (2.3in,2.3in);
-    \node at (1.15in,1.15in) {\qrcode[height=2.0in]{https://demo.vgac.cloud/}};
+    \fill[white] (0,0) rectangle (2.5in,2.5in);
+    \node at (1.25in,1.25in) {\qrcode[height=2.2in]{https://demo.vgac.cloud/}};
   \end{tikzpicture}\\[-0.02in]
   {\centering\fontsize{16}{20}\selectfont\color{sand}scan for live demo\par}
 \end{minipage}
 
-\vspace{0.52in}
+\vspace{0.48in}
 
 % ── Takeaway ────────────────────────────────────────────────────────
 \noindent
 \colorbox{pytorch}{%
   \parbox{\dimexpr\textwidth-2\fboxsep-2\fboxrule}{%
     \vspace{0.14in}
-    {\fontsize{30}{38}\selectfont\bfseries\color{white}
+    {\fontsize{28}{36}\selectfont\bfseries\color{white}
     Queue wait is the user-visible latency on a shared GPU cluster.
     GPU utilization does not see it.
     We measure Queue-of-Work Reliability (QWR) --- a calibrated
     $P(\mathrm{wait}>\mathrm{SLO})$ --- and gate actions on its ECE.
-    The live production model is at ECE 0.068: both models land in T2 Warn.}
+    Live model ECE 0.068, held-out Slurm ECE 0.056: both land in T2 Warn.}
     \vspace{0.14in}
   }%
 }
@@ -195,25 +194,25 @@ Mechanistic failure modes. The Slurm DCGM slice is idle T4 queue-wait
 
 {\body
 Actions are not ``the model said 70\%.'' They are gated on whether that
-70\% is calibrated. The tier ladder from \texttt{tier\_qualification.png}:
+70\% is calibrated. The tier ladder:
 }
 
 \vspace{0.22in}
-\begin{tikzpicture}[x=1.65in, y=0.90in]
+\begin{tikzpicture}[x=1.68in, y=0.90in]
   \foreach \i/\lab/\fill/\fg/\thresh in {
     0/T1 Annotate/annotate/white/ECE $<$ 0.10,
     1/T2 Warn/warnc/navy/ECE $<$ 0.07,
     2/T3 Suggest/suggest/white/ECE $<$ 0.05,
     3/T4 Gate/ok/white/ECE $<$ 0.03} {
-      \node[draw=none, fill=\fill, text=\fg, font=\bfseries\fontsize{22}{26}\selectfont,
-            minimum width=1.56in, minimum height=0.72in, align=center] at (\i,0) {\lab};
+      \node[draw=none, fill=\fill, text=\fg, font=\bfseries\fontsize{20}{24}\selectfont,
+            minimum width=1.58in, minimum height=0.72in, align=center] at (\i,0) {\lab};
       \node[font=\fontsize{17}{21}\selectfont, text=muted, anchor=north] at (\i,-0.52) {\thresh};
   }
-  \draw[ultra thick, pytorch, -{Latex[length=3mm]}] (0.3,-1.06) -- (0.3,-0.62);
-  \node[font=\fontsize{17}{21}\selectfont\bfseries, text=pytorch, anchor=north] at (0.3,-1.06) {both models};
+  \draw[ultra thick, pytorch, -{Latex[length=3mm]}] (1,-1.06) -- (1,-0.52);
+  \node[font=\fontsize{17}{21}\selectfont\bfseries, text=pytorch, anchor=north] at (1,-1.06) {both models};
 \end{tikzpicture}
 
-\vspace{0.32in}
+\vspace{0.28in}
 {\body
 {\bfseries\color{navy}Live VGAC} \hfill \texttt{v4.0-richfeatures-lr}\\[0.06in]
 ECE \textbf{0.068} \quad AUROC 0.766 \quad $n=5{,}184$\\
@@ -239,12 +238,13 @@ Do not pool AUROC or ECE across those labels.
 Figure C is Paper 3 (650 EKS jobs, ECE 0.077) --- not the live 0.068 card.}
 \end{minipage}
 
-\vspace{0.38in}
+\vspace{0.30in}
 
 % ── Figures ─────────────────────────────────────────────────────────
 \kicker{Measured evidence}
 \sectionhead{Queue wait is the measured story}
 
+\vspace{0.06in}
 \begin{minipage}[t]{\colw}
 \centering
 \includegraphics[width=\linewidth]{\figpath/wait_distribution.png}\\[0.10in]
@@ -261,12 +261,12 @@ is the QWR feature; utilization is not on this plot.}
 \gutterh
 \begin{minipage}[t]{\colw}
 \centering
-\includegraphics[width=0.92\linewidth]{\figpath/calibration_curve.png}\\[0.10in]
+\includegraphics[width=\linewidth]{\figpath/calibration_curve.png}\\[0.10in]
 {\captiontext\textbf{C.} Reliability diagram, EKS wait $>120$s,
 logistic ECE 0.077 (Paper 3). Live ECE is 0.068.}
 \end{minipage}
 
-\vspace{0.38in}
+\vspace{0.36in}
 
 % ── Bottom: decision flow + real limits ─────────────────────────────
 \begin{minipage}[t]{0.58\textwidth}
@@ -312,17 +312,19 @@ candidates. HPC\,=\,SAI candidate.
 }
 \end{minipage}
 
+\vfill
+
 % Footer bar
 \begin{tikzpicture}[remember picture,overlay]
-  \fill[navy] (current page.south west) rectangle ([yshift=0.92in]current page.south east);
-  \node[anchor=west, text=sand, font=\fontsize{18}{22}\selectfont, inner sep=0] at
-    ([xshift=0.46in, yshift=0.46in]current page.south west) {%
+  \fill[navy] (current page.south west) rectangle ([yshift=0.82in]current page.south east);
+  \node[anchor=west, text=sand, font=\fontsize{16}{20}\selectfont, inner sep=0] at
+    ([xshift=0.46in, yshift=0.42in]current page.south west) {%
       Andrew Espira, Saint Peter's University
-      \quad$\cdot$\quad
-      Framing: public Google SRE community discussion of AI-workload monitoring
-      \quad$\cdot$\quad
-      QWR artifact: github.com/espirado/Reliability-First-Queue-Risk
-      \quad$\cdot$\quad
+      \enspace$\cdot$\enspace
+      Framing: public Google SRE community discussion
+      \enspace$\cdot$\enspace
+      QWR: github.com/espirado/Reliability-First-Queue-Risk
+      \enspace$\cdot$\enspace
       Poster: github.com/espirado/Golden-Signals-AI-GPU
     };
 \end{tikzpicture}

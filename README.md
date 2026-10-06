@@ -34,13 +34,13 @@ Poster numbers are the **held-out** Slurm split and the live model card. A local
 
 | Claim | Number | Source |
 | --- | --- | --- |
-| Slurm GB, held-out | AUROC **0.863** (CI 0.71–0.96), ECE **0.056**, n_test=111 (444/111 of 555), tier **suggest** | [Reliability-First-Queue-Risk](https://github.com/espirado/Reliability-First-Queue-Risk) `artifacts/slurm_real_benchmark.json` |
+| Slurm GB, held-out | AUROC **0.863** (CI 0.71–0.96), ECE **0.056**, n_test=111 (444/111 of 555), tier **warn** (T2: ECE < 0.07 but > 0.05) | [Reliability-First-Queue-Risk](https://github.com/espirado/Reliability-First-Queue-Risk) `artifacts/slurm_real_benchmark.json` |
 | Slurm label | long wait = wait > P90 = 133s, ~10% base rate; ~8 positives in the test set; 0 true alerts at p≥0.7 | same JSON + Paper 2 wait table |
 | Live VGAC production | AUROC 0.766, ECE **0.068**, n=5,184, `v4.0-richfeatures-lr` | [demo.vgac.cloud](https://demo.vgac.cloud/) `/model/health` |
 | Paper 3 VGAC abstract | 650 EKS jobs, AUROC 0.756, ECE 0.077 | `Prediction-to-Policy-Integration` |
 | EKS label | long wait = wait > 120s, near the median (~48% violation rate in the 650-job notebook) | Paper 3 / `paper2_notebook_results.json` |
 
-**The gate does not pass production.** Advisory is ECE ≤ 0.05; gate is ECE ≤ 0.03. Live 0.068 and Paper 3 0.077 are **warn / suggest**. Say that on a poster titled *Calibration-Gated Decisions*. Do not use `sli_dashboard.png` panel (d), which paints EKS as T4 Gate.
+**The gate does not pass production.** Advisory is ECE ≤ 0.05; gate is ECE ≤ 0.03. Live 0.068 and Paper 3 0.077 are both **T2 Warn** on the Annotate/Warn/Suggest/Gate ladder. Say that on a poster titled *Calibration-Gated Decisions*. Do not use `sli_dashboard.png` panel (d), which paints EKS as T4 Gate.
 
 Do **not** print “1.2M pod events validate five signals,” “22% goodput lost to stragglers,” “util% vs goodput r≈0.1,” or drift PSI≈12.4. Those are literature/simulation, undefined on idle DCGM, or empty-bin artifacts (`data/samples/drift_metrics.json`: ECE 0.000 and AUROC 1.000 in seven of eight windows).
 
