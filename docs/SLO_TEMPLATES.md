@@ -157,17 +157,27 @@ oqc_training_zscore:max10m{run=~"$run"}
 
 The five signals compose into one dashboard row with five sparklines and a *composite health index*:
 
-Each term is a **normalized in-SLO score** in $[0,1]$, equal to $1$ iff that signal meets its SLO. Do **not** put raw GCE or HPH (fractions that are typically $<1$ even when healthy) into the $\min$, and do not use $1/\text{SAI}$ (that would make ClusterHealth $<1$ whenever steps are not perfectly synchronous).
+Each term is a **normalized in-SLO score** in $[0,1]$. The requirement: $h = 1$ whenever the signal is at or inside its SLO, and $h$ degrades linearly from $1$ to $0$ as the signal moves from the SLO boundary to the hard-fail boundary.
+
+| Signal | In-SLO when | Hard-fail |
+| --- | --- | --- |
+| QWR (ECE) | $\le 0.05$ | $\ge 0.10$ |
+| GCE (effectiveness) | $\ge 0.85$ | $\le 0.70$ |
+| HPH (headroom fraction) | $\ge 0.10$ | $\le 0.0$ |
+| SAI (P90/P50 step ratio) | $\le 1.2$ | $\ge 2.0$ |
+| OQC (ECE) | $\le 0.05$ | $\ge 0.10$ |
 
 $$
 \begin{aligned}
-h_{\text{QWR}} &= \mathrm{clip}\bigl((0.05 - \text{QWR}) / 0.05,\, 0,\, 1\bigr) \\
-h_{\text{GCE}} &= \mathrm{clip}\bigl((\text{GCE} - 0.85) / (1 - 0.85),\, 0,\, 1\bigr) \\
-h_{\text{HPH}} &= \mathrm{clip}\bigl((\text{HPH} - 0.10) / (1 - 0.10),\, 0,\, 1\bigr) \\
-h_{\text{SAI}} &= \mathrm{clip}\bigl((1.2 / \text{SAI}),\, 0,\, 1\bigr) \quad\text{(in-SLO at SAI}\le 1.2\text{)} \\
-h_{\text{OQC}} &= \mathrm{clip}\bigl((0.05 - \text{OQC}) / 0.05,\, 0,\, 1\bigr) \\
-\text{ClusterHealth} &= \min(h_{\text{QWR}}, h_{\text{GCE}}, h_{\text{HPH}}, h_{\text{SAI}}, h_{\text{OQC}})
+h_{\text{QWR}} &= \mathrm{clip}\bigl((\,0.10 - \text{QWR}\,) \;/\; (\,0.10 - 0.05\,),\; 0,\; 1\bigr) \\
+h_{\text{GCE}} &= \mathrm{clip}\bigl((\text{GCE} - 0.70\,) \;/\; (\,0.85 - 0.70\,),\; 0,\; 1\bigr) \\
+h_{\text{HPH}} &= \mathrm{clip}\bigl(\text{HPH} \;/\; 0.10,\; 0,\; 1\bigr) \\
+h_{\text{SAI}} &= \mathrm{clip}\bigl((\,2.0 - \text{SAI}\,) \;/\; (\,2.0 - 1.2\,),\; 0,\; 1\bigr) \\
+h_{\text{OQC}} &= \mathrm{clip}\bigl((\,0.10 - \text{OQC}\,) \;/\; (\,0.10 - 0.05\,),\; 0,\; 1\bigr) \\[6pt]
+\text{ClusterHealth} &= \min(h_{\text{QWR}},\; h_{\text{GCE}},\; h_{\text{HPH}},\; h_{\text{SAI}},\; h_{\text{OQC}})
 \end{aligned}
 $$
 
-Then `ClusterHealth < 1` means at least one signal is out of budget. Live VGAC QWR ECE 0.068 $\Rightarrow$ $h_{\text{QWR}} = 0$: the composite is already 0 (warn), matching the gate. This dashboard is a recipe, not a deployed monitor.
+**Spot-check.** QWR ECE 0.03 (inside SLO) → $h_{\text{QWR}} = (0.10 - 0.03)/(0.05) = 1.4 → 1$ ✓. QWR ECE 0.068 (live model, outside SLO) → $(0.10 - 0.068)/0.05 = 0.64$. QWR ECE 0.10 (hard-fail) → $h = 0$.
+
+Then `ClusterHealth < 1` means at least one signal is outside its SLO budget. Live VGAC QWR ECE 0.068 $\Rightarrow$ $h_{\text{QWR}} = 0.64$, not 1: the composite degrades, matching the T2 Warn tier. This dashboard is a recipe, not a deployed monitor.

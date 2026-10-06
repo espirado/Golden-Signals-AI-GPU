@@ -6,7 +6,7 @@ This repository is the poster and taxonomy home. Measured queue-reliability evid
 
 | Artifact | Audience | Status |
 | --- | --- | --- |
-| **Poster** (`tex/poster/poster.pdf`) | PyTorch practitioners / SREs | First full draft --- **24×34 in A1** (2026 spec, not 36×24) |
+| **Poster** (`tex/poster/poster.pdf`) | PyTorch practitioners / SREs | First full draft --- **24×34 in portrait** (fits within organizer 36×24 max) |
 | **Research paper** (`tex/research/`) | ML systems / SRE researchers | Outline + skeleton |
 | **Practitioner article** (`tex/practitioner/`) | SREs, ML infra operators | Outline + skeleton |
 
