@@ -35,17 +35,19 @@ tailored to AI GPU workloads --- \emph{Queue-of-Work Reliability},
 \emph{GPU-Compute Effectiveness}, \emph{HBM-Pressure Headroom},
 \emph{Straggler Amplification Index}, and \emph{Output-Quality
 Calibration} --- each defined precisely, each with an SLO template and a
-burn-rate multi-window alert, and each validated on measured data from
-four heterogeneous environments (Amazon EKS, AWS ParallelCluster Slurm,
-Alibaba GPU trace v2020/2023, Google Borg 2019). We show the five signals
-are mutually informative rather than redundant and that they are cheaply
-computable from telemetry a well-instrumented cluster already emits.
+burn-rate multi-window alert. Only Queue-of-Work Reliability is measured
+to date (held-out Slurm gradient boosting: AUROC $0.863$, 95\% CI
+$0.71$--$0.96$, ECE $0.056$, $n_{\text{test}}=111$; live VGAC ECE
+$0.068$ on $n=5184$, which fails the $0.03$ gate and $0.05$ advisory
+thresholds). GPU-Compute Effectiveness, HBM-Pressure Headroom, Straggler
+Amplification Index, and Output-Quality Calibration remain candidates.
+We do not claim a four-environment validation of all five.
 \end{abstract}
 
 \section{Introduction}\label{sec:intro}
-\emph{TODO. Motivating example: an EKS cluster with 100\% \texttt{util\%}
-and healthy p99 HTTP latency is silently dropping 22\% goodput to
-stragglers. Contribution list.}
+\emph{TODO. Motivating example: industry reports of 15--25\% goodput
+loss to stragglers are literature, not this trace. Contribution list:
+five candidate signals; QWR measured; live gate currently at warn.}
 
 \section{Background}\label{sec:bg}
 \emph{TODO. Golden signals lineage (SRE Book, SRE Workbook, Implementing
@@ -67,13 +69,12 @@ Each subsection covers one signal.}
 \subsection{Output-Quality Calibration (OQC)}\label{sec:oqc}
 
 \section{Data and measurement protocol}\label{sec:data}
-\emph{TODO. Four environments; per-signal extraction recipe cross-linked
-to \texttt{code/}.}
+\emph{TODO. QWR: Slurm held-out 444/111 and live VGAC. EKS label wait$>$120s;
+Slurm label wait$>$P90 133s. DCGM idle. Do not write 1.2M-validates-five.}
 
 \section{Empirical validation}\label{sec:results}
-\emph{TODO. Per-signal behavior across four environments;
-cross-signal correlation table; failure-mode case studies;
-alert-simulation comparison to classical golden-signal alerts.}
+\emph{TODO. QWR only. Do not populate a five-signal four-environment
+table. Do not use sli\_dashboard.png or drift\_metrics.json as-is.}
 
 \section{Operational integration}\label{sec:ops}
 \emph{TODO. SLO templates, tier-qualification tie-in, calibration monitor

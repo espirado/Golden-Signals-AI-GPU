@@ -28,7 +28,7 @@ on a window $W$ (default 7 days for production, 250 jobs for HPC). Complementary
 - A predictor that has become miscalibrated (a "50%" wait risk is really 90%) without the underlying latency distribution changing.
 - Cross-cluster transfer degradation — new cluster with familiar-looking metrics but very different queue dynamics.
 
-**Evidence source in this repo.** ISS26 paper + `artifacts/legacy_paper2/` (Slurm 555-job trace, EKS 1.2M events).
+**Evidence.** Held-out Slurm GB in the public companion: AUROC 0.863 (CI 0.71–0.96), ECE 0.056, n_test=111, tier suggest — `Reliability-First-Queue-Risk/artifacts/slurm_real_benchmark.json`. Live VGAC `/model/health`: ECE 0.068 on n=5,184 (warn vs 0.05 advisory / 0.03 gate). Do not cite local-only `results/model_evaluation_slurm.json` (0.985 / 0.006). Long-wait labels differ: Slurm > P90 133s (~10%); EKS > 120s (near median).
 
 ---
 
@@ -53,7 +53,7 @@ The composition $f$ is a small learned classifier (logistic regression is suffic
 - **Straggler warming**: a single node running hot and about to throttle, before it actually trips HW_SLOWDOWN.
 - **Power-brake trips** which correlate with poorly-provisioned racks and produce mysterious throughput drops.
 
-**Evidence source.** DCGM traces already collected in this program; failure modes cited in Meta LLaMA-3 [1], Modal healthchecking [2], and PinDrop [3].
+**Evidence source.** Failure modes cited in Meta LLaMA-3 [1], Modal healthchecking [2], and PinDrop [3]. The DCGM slice in this program is idle T4 queue-wait — do not compute GCE from it. There is no `code/monitors/gce.py` in this repo.
 
 ---
 
@@ -92,7 +92,7 @@ $$
 \text{SAI} \;=\; \frac{P90(\text{step\_time}_i)}{P50(\text{step\_time}_i)},\quad i \in \text{workers}
 $$
 
-$\text{SAI} \approx 1.0$ is healthy; $\text{SAI} > 1.5$ means one slow GPU is dragging the whole tier and the useful goodput of the job is $1/\text{SAI}$ of what the GPU count would predict.
+$\text{SAI} \approx 1.0$ is healthy; $\text{SAI} > 1.5$ means one slow GPU is dragging the whole tier. The shortcut “useful goodput $= 1/\text{SAI}$” assumes **fully synchronous** data-parallel steps; it does not hold for pipeline/async schedules.
 
 **SLO template.**
 - Target: SAI $\leq 1.2$ over any 10-minute window.
@@ -103,7 +103,7 @@ $\text{SAI} \approx 1.0$ is healthy; $\text{SAI} > 1.5$ means one slow GPU is dr
 - The single-degraded-GPU failure mode PinDrop specifically documents [3]: NCCL tail latency from one slow card in an all-reduce, dropping goodput by 20–40%.
 - Silent thermal throttling on one card among many.
 
-**Evidence source.** Per-GPU DCGM utilization variance in existing traces; direct step-time telemetry needs to be added for a live cluster (documented as a follow-on measurement in the research paper).
+**Evidence source.** Candidate only. Existing DCGM is idle; there are no per-worker step times in any current tree. PinDrop [3] is the literature prior, not a measurement we ran.
 
 ---
 
@@ -144,7 +144,7 @@ $$
 | **SAI** — Straggler amp. | medium | high | low | 1.0 | |
 | **OQC** — Output quality | low | low | medium | low | 1.0 |
 
-The claim we would like the empirical section to defend: the five signals are **mutually informative rather than redundant**. Populate this table from the four-environment dataset before drafting §V of the research paper.
+This matrix is **empty on purpose**. Do not draft §V as if the five signals were validated on four environments. Only QWR has numbers.
 
 ---
 

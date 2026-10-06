@@ -48,7 +48,7 @@ queue_predictor_ece_7d{cluster=~"$cluster"}
 
 ## Signal 2 — GPU-Compute Effectiveness (GCE)
 
-**SLI.** Fraction of the last N minutes classified as "useful compute" by the compound-signal classifier (see `code/monitors/gce.py`).
+**SLI.** Fraction of the last N minutes classified as "useful compute" by the compound-signal classifier (not implemented in this repo; recipe only).
 
 ```promql
 gce_useful_fraction:rate10m
@@ -157,8 +157,17 @@ oqc_training_zscore:max10m{run=~"$run"}
 
 The five signals compose into one dashboard row with five sparklines and a *composite health index*:
 
+Each term is a **normalized in-SLO score** in $[0,1]$, equal to $1$ iff that signal meets its SLO. Do **not** put raw GCE or HPH (fractions that are typically $<1$ even when healthy) into the $\min$, and do not use $1/\text{SAI}$ (that would make ClusterHealth $<1$ whenever steps are not perfectly synchronous).
+
 $$
-\text{ClusterHealth} \;=\; \min\bigl(1 - \text{QWR}/0.05,\; \text{GCE},\; \text{HPH},\; \tfrac{1}{\text{SAI}},\; 1 - \text{OQC}/0.05\bigr)
+\begin{aligned}
+h_{\text{QWR}} &= \mathrm{clip}\bigl((0.05 - \text{QWR}) / 0.05,\, 0,\, 1\bigr) \\
+h_{\text{GCE}} &= \mathrm{clip}\bigl((\text{GCE} - 0.85) / (1 - 0.85),\, 0,\, 1\bigr) \\
+h_{\text{HPH}} &= \mathrm{clip}\bigl((\text{HPH} - 0.10) / (1 - 0.10),\, 0,\, 1\bigr) \\
+h_{\text{SAI}} &= \mathrm{clip}\bigl((1.2 / \text{SAI}),\, 0,\, 1\bigr) \quad\text{(in-SLO at SAI}\le 1.2\text{)} \\
+h_{\text{OQC}} &= \mathrm{clip}\bigl((0.05 - \text{OQC}) / 0.05,\, 0,\, 1\bigr) \\
+\text{ClusterHealth} &= \min(h_{\text{QWR}}, h_{\text{GCE}}, h_{\text{HPH}}, h_{\text{SAI}}, h_{\text{OQC}})
+\end{aligned}
 $$
 
-If any of the five signals is out of budget, `ClusterHealth < 1`. This is the single number an on-call SRE should watch, with drill-down to the individual signals.
+Then `ClusterHealth < 1` means at least one signal is out of budget. Live VGAC QWR ECE 0.068 $\Rightarrow$ $h_{\text{QWR}} = 0$: the composite is already 0 (warn), matching the gate. This dashboard is a recipe, not a deployed monitor.

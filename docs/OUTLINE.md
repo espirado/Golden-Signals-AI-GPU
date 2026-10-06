@@ -4,7 +4,7 @@ Both drafts share a single evidence base. Where a section number below is prefix
 
 ## Research paper (`tex/research/`) — target 10–14 pp
 
-**R1. Introduction.** Golden signals travel poorly to AI GPU workloads. Motivating example: an EKS cluster with 100% `util%` and healthy p99 request latency is silently dropping 22% goodput to stragglers. Contribution list: five signals + empirical validation + SLO templates + operator runbook.
+**R1. Introduction.** Golden signals travel poorly to AI GPU workloads. Motivating example must be labeled: 15–25% goodput loss to stragglers is **industry/literature**, not a measurement from this trace. Contribution list: five *candidate* signals + QWR measurement + SLO templates. Do not claim empirical validation of all five.
 
 **R2. Background.**
 - R2.1 Classical four golden signals (Beyer et al., *SRE Book* ch.6) and their assumptions (stateless service, request/response).
@@ -19,18 +19,14 @@ Both drafts share a single evidence base. Where a section number below is prefix
 - R3.5 OQC — output-quality calibration (train and inference variants).
 - R3.6 Composition: the five as a monitoring **basis**, not five isolated alerts.
 
-**R4. Data and measurement protocol.**
-- Amazon EKS (1.2M pod events)
-- AWS ParallelCluster Slurm (555 jobs + DCGM)
-- Alibaba v2020, v2023
-- Google Borg 2019
-- Per-signal extraction recipe cross-referenced to `code/`.
+**R4. Data and measurement protocol.** Be explicit about what each environment supports:
+- Amazon EKS — QWR on VGAC (live n=5,184, ECE 0.068 warn; Paper 3 n=650, ECE 0.077). Label = wait > 120s.
+- AWS ParallelCluster Slurm — QWR held-out 444/111, GB AUROC 0.863 / ECE 0.056. Label = wait > P90 133s. DCGM idle.
+- Alibaba v2020, v2023 — scheduler transfer, not GCE/SAI.
+- Google Borg 2019 — same.
+- Do not write “1.2M pod events validate five signals.”
 
-**R5. Empirical results.**
-- R5.1 Each signal's behavior across the four environments.
-- R5.2 The cross-signal correlation table from `SIGNALS_TAXONOMY.md` — argument that the five are mutually informative, not redundant.
-- R5.3 Failure-mode case studies (e.g., "GCE catches the throttling episode `util%` marks green").
-- R5.4 SLO burn-rate simulation: given a workload trace, how the alerts of §III fire vs. classical golden-signal alerts.
+**R5. Empirical results.** QWR only, until GCE/HPH/SAI/OQC are extracted. Cross-signal correlation table is empty. Do not use `sli_dashboard.png` or `drift_metrics.json` as-is.
 
 **R6. Operational integration.**
 - R6.1 A monitoring framework tying the five signals to existing SRE tooling (Prometheus, OpenTelemetry, Datadog).
@@ -61,7 +57,7 @@ Both drafts share a single evidence base. Where a section number below is prefix
 
 **P4. Copy-pasteable SLO templates.** Prometheus / OpenTelemetry snippets from `docs/SLO_TEMPLATES.md`.
 
-**P5. A short case study from the four-environment dataset.**
+**P5. A short case study from QWR (Slurm held-out + live VGAC warn-tier ECE). Not a four-environment five-signal study.**
 
 **P6. What we don't know yet.** Honest open-question list — matches R7.
 
@@ -69,4 +65,4 @@ Both drafts share a single evidence base. Where a section number below is prefix
 
 ## Positioning statement (the elevator pitch, for both artifacts)
 
-*The four golden signals — latency, traffic, errors, saturation — were codified for stateless request/response services. AI workloads on GPU clusters are neither stateless nor request/response, and every large operator has been forced to invent an incomplete set of substitute signals. We propose five: Queue-of-Work Reliability, GPU-Compute Effectiveness, HBM-Pressure Headroom, Straggler Amplification Index, and Output-Quality Calibration. We define each precisely, provide an SLO template with burn-rate multi-window alerts, and validate them on ~1.2M pod events across four heterogeneous environments. The signals are cheap to compute from telemetry a well-instrumented cluster already emits, and they compose with existing SRE tooling.*
+*The four golden signals — latency, traffic, errors, saturation — were codified for stateless request/response services. AI workloads on GPU clusters are neither stateless nor request/response, and every large operator has been forced to invent an incomplete set of substitute signals. We propose five candidates: Queue-of-Work Reliability, GPU-Compute Effectiveness, HBM-Pressure Headroom, Straggler Amplification Index, and Output-Quality Calibration. We define each precisely and provide SLO templates. Only QWR is measured so far (Slurm held-out GB AUROC 0.863 / ECE 0.056; live VGAC ECE 0.068, warn vs a 0.03 gate). The signals are cheap to compute from telemetry a well-instrumented cluster already emits.*

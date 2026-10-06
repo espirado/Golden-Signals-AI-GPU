@@ -16,11 +16,11 @@ The four [golden signals of monitoring](https://sre.google/sre-book/monitoring-d
 
 ## Five candidate signals
 
-These are a **minimum viable set** for a paging rotation, not a closed empirical claim.
+These are a **minimum viable set** for a paging rotation, not a closed empirical claim. Only QWR is measured.
 
 | Signal | Generalizes | Evidence in this program |
 | --- | --- | --- |
-| **QWR** — Queue-of-Work Reliability | Latency (queue) | **Measured.** Slurm 555-job study + live VGAC `/model/health` and `/api/predict/wait` |
+| **QWR** — Queue-of-Work Reliability | Latency (queue) | **Measured.** Held-out Slurm study + live VGAC `/model/health` |
 | **GCE** — GPU-Compute Effectiveness | Saturation (compute) | Defined. DCGM fields exist; the Slurm T4 run was idle (`util=0`) |
 | **HPH** — HBM-Pressure Headroom | Saturation (memory) | Defined. Same idle-trace limit |
 | **SAI** — Straggler Amplification Index | Latency (collectives) | Candidate. No per-worker step times yet |
@@ -30,26 +30,43 @@ Definitions and SLO templates: [`docs/SIGNALS_TAXONOMY.md`](docs/SIGNALS_TAXONOM
 
 ## What you can cite today
 
+Poster numbers are the **held-out** Slurm split and the live model card. A local-only `results/model_evaluation_slurm.json` reports GB AUROC 0.985 / ECE 0.006 on 388/167; that file is **not** on GitHub and looks in-sample. Do not print it.
+
 | Claim | Number | Source |
 | --- | --- | --- |
-| Slurm long-wait classifier (GB) | AUROC 0.985, ECE 0.006, n=555, P90 wait 133s | [Reliability-First-Queue-Risk](https://github.com/espirado/Reliability-First-Queue-Risk) `results/model_evaluation_slurm.json` |
-| Live VGAC production model | AUROC 0.766, ECE 0.068, n=5,184 | [demo.vgac.cloud](https://demo.vgac.cloud/) `/model/health` (`v4.0-richfeatures-lr`) |
+| Slurm GB, held-out | AUROC **0.863** (CI 0.71–0.96), ECE **0.056**, n_test=111 (444/111 of 555), tier **suggest** | [Reliability-First-Queue-Risk](https://github.com/espirado/Reliability-First-Queue-Risk) `artifacts/slurm_real_benchmark.json` |
+| Slurm label | long wait = wait > P90 = 133s, ~10% base rate; ~8 positives in the test set; 0 true alerts at p≥0.7 | same JSON + Paper 2 wait table |
+| Live VGAC production | AUROC 0.766, ECE **0.068**, n=5,184, `v4.0-richfeatures-lr` | [demo.vgac.cloud](https://demo.vgac.cloud/) `/model/health` |
 | Paper 3 VGAC abstract | 650 EKS jobs, AUROC 0.756, ECE 0.077 | `Prediction-to-Policy-Integration` |
+| EKS label | long wait = wait > 120s, near the median (~48% violation rate in the 650-job notebook) | Paper 3 / `paper2_notebook_results.json` |
 
-Do **not** print “1.2M pod events validate five signals,” “22% goodput lost to stragglers,” or “util% vs goodput r≈0.1” from this repo. Those either live in another tree, are literature/simulation, or are undefined on the idle Slurm DCGM columns.
+**The gate does not pass production.** Advisory is ECE ≤ 0.05; gate is ECE ≤ 0.03. Live 0.068 and Paper 3 0.077 are **warn / suggest**. Say that on a poster titled *Calibration-Gated Decisions*. Do not use `sli_dashboard.png` panel (d), which paints EKS as T4 Gate.
 
-Poster-ready plots from Paper 2 are copied into `figures/` (`sli_dashboard`, calibration, wait vs queue, tier qualification).
+Do **not** print “1.2M pod events validate five signals,” “22% goodput lost to stragglers,” “util% vs goodput r≈0.1,” or drift PSI≈12.4. Those are literature/simulation, undefined on idle DCGM, or empty-bin artifacts (`data/samples/drift_metrics.json`: ECE 0.000 and AUROC 1.000 in seven of eight windows).
+
+## Figures
+
+| File | Print? |
+| --- | --- |
+| `calibration_curve.png` (ECE 0.077) | Yes |
+| `wait_distribution.png` | Yes |
+| `wait_vs_queue_depth.png` | Yes |
+| `sli_dashboard.png` | No — (d) wrong EKS tier, (e) degenerate ECE, (f) empty |
+| `transfer_and_drift.png` | No — PSI ~12.41 empty-bin artifact |
+| `reliability_diagrams.png` | Only with a caption: EKS n=4,000 on that plot vs 650 / 5,184 elsewhere |
+
+Wherever Slurm and EKS appear together, state the two different “long wait” labels.
 
 ## Live demo
 
 - UI: https://demo.vgac.cloud/
 - Deploy tree: private repo [espirado/vgac](https://github.com/espirado/vgac) — `scripts/deploy-demo.sh`, `infra/terraform/envs/demo`
 
-VGAC tabs map to the poster: Predictions = QWR, Calibration = the gate, GPUs = GCE/HPH candidates, HPC = SAI candidate.
+VGAC tabs map to the poster: Predictions = QWR, Calibration = the gate (currently **warn**), GPUs = GCE/HPH candidates, HPC = SAI candidate.
 
 ## Companion repositories
 
-- [Reliability-First-Queue-Risk](https://github.com/espirado/Reliability-First-Queue-Risk) — Paper 2, QWR SLIs
+- [Reliability-First-Queue-Risk](https://github.com/espirado/Reliability-First-Queue-Risk) — Paper 2, QWR SLIs. Public tree has `artifacts/` and `data/samples/`, not `results/` or `data/training_dataset.csv`.
 - [Prediction-to-Policy-Integration](https://github.com/espirado/Prediction-to-Policy-Integration) — Paper 3 / VGAC policy
 - `research-fall2025` — shared `src/sli` and `src/tier` (local data volume may be unmounted)
 

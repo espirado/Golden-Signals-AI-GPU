@@ -1,6 +1,6 @@
 # Why the Classical Four Golden Signals Travel Poorly to AI Workloads on GPU Clusters
 
-The four golden signals codified in the Google *SRE Book* — **latency, traffic, errors, saturation** — remain the correct default for stateless request/response services. This document argues, with concrete failure examples grounded in the four-environment dataset in this repository, that the four break down when they meet AI training and inference on shared GPU clusters, and that a substitute set is needed.
+The four golden signals codified in the Google *SRE Book* — **latency, traffic, errors, saturation** — remain the correct default for stateless request/response services. This document argues that the four break down when they meet AI training and inference on shared GPU clusters, and that a substitute set is needed. Failure modes below are **mechanistic / literature**, not three measured correlations from this repo. Do not treat $r < 0.1$, $r \approx 0.2$, or $r \approx 0.1$ as results.
 
 ## Latency
 
@@ -15,7 +15,7 @@ The four golden signals codified in the Google *SRE Book* — **latency, traffic
 | **Epoch-level** ($t_{\text{epoch}}$) | Training | Wall-clock time per epoch or per step. The user is the ML engineer, not the end-user. |
 | **Queue-level** ($t_{\text{queue}}$) | Any workload on a shared cluster | Time from `sbatch` / `kubectl apply` to first CUDA context. Often *larger than* all three above and invisible to service-level latency probes. |
 
-**Empirical evidence.** On the 555-job Slurm trace, wall-clock queue latency (Slurm submit-to-start) is uncorrelated with service-level latency ($r < 0.1$). Alerting on classical p99 latency would miss queue-based user-visible slowness entirely.
+**What we can say from this program.** The 555-job Slurm run is a *queue-wait* experiment: submit-to-start is the outcome we labeled (P90 = 133s). We did not measure service-level (token/batch/epoch) latency on that trace, so there is no correlation coefficient to report. The operational point still holds: classical p99 request latency does not see `sbatch` / pending-pod wait.
 
 ## Traffic
 
@@ -37,7 +37,7 @@ The four golden signals codified in the Google *SRE Book* — **latency, traffic
 - Training-side "errors" are a different beast entirely — a gradient-explosion NaN is an error; a slowly diverging loss is a *quality regression* that no `except:` block catches.
 - **OOM kills** and **HW_SLOWDOWN throttling** manifest as job restarts or extended step times, not as request errors. They should be first-class signals.
 
-**Empirical evidence.** On the EKS 1.2M-event trace, request-level HTTP errors correlate weakly ($r \approx 0.2$) with GPU-side reliability signals such as ECE drift and thermal throttling episodes. The two channels are largely independent — meaning error-rate alerting alone leaves a substantial class of AI failures dark.
+**What we can say from this program.** We have not computed a correlation between HTTP errors and GPU-side ECE or thermal events. Silent quality failure is a known category (HTTP 200 with a bad output); OQC is the proposed replacement, and it is not yet measured here. Queue-delay ECE on VGAC is QWR, not OQC.
 
 ## Saturation
 
@@ -52,7 +52,7 @@ The four golden signals codified in the Google *SRE Book* — **latency, traffic
 5. **Interconnect (NVLink / NCCL) tail latency** — one slow card in an all-reduce — is invisible in single-GPU `util%`.
 6. **HBM pressure** — the other saturation dimension — is separately reported by DCGM and is a distinct signal.
 
-**Empirical evidence.** In the DCGM Slurm slice, `util%` is uncorrelated with useful goodput ($r \approx 0.1$) once thermal and power-brake episodes are conditioned on. Signals 2 (GCE), 3 (HPH), and 4 (SAI) between them capture the four distinct GPU saturation modes classical `util%` conflates.
+**What we can say from this program.** On the Slurm T4 queue-wait run, DCGM `util%` / mem / power columns are idle (util = 0). A correlation with goodput is undefined on that slice. The lying-`util%` argument is literature (time-busy vs useful compute), not a coefficient from this CSV. GCE, HPH, and SAI are the proposed replacements; they are not extracted here.
 
 ## Summary
 

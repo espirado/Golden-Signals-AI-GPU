@@ -7,11 +7,12 @@ title: >-
   Golden Signals for AI Workloads on Shared GPU Clusters
   (research artifact repository)
 abstract: >-
-  Reproducible research artifact for the "five golden signals for AI
-  workloads" paper: five SLIs (Queue-of-Work Reliability, GPU-Compute
+  Research artifact for five *candidate* golden signals for AI workloads
+  on shared GPU clusters (Queue-of-Work Reliability, GPU-Compute
   Effectiveness, HBM-Pressure Headroom, Straggler Amplification Index,
-  Output-Quality Calibration), their SLO templates, and empirical
-  validation across four heterogeneous GPU-cluster environments.
+  Output-Quality Calibration) and their SLO templates. Only Queue-of-Work
+  Reliability is measured in the companion traces; the others are defined
+  here as a monitoring basis, not a four-environment empirical validation.
 version: 0.1.0-draft
 date-released: "2026-07-07"
 license: MIT

@@ -48,7 +48,7 @@
 
 1. *SRE Book Chapter 6* — canonical golden signals. We propose the AI-workload extension.
 2. *Meta LLaMA-3 paper (Section on infrastructure failures)* — describes what fails, not how to monitor for it. We convert their failure taxonomy into monitored signals with SLOs.
-3. *Modal healthchecking* — describes active healthchecks that take ~1h and require exclusive node access. We show that the same failure modes are visible in *passive* DCGM aggregates at zero scheduling cost.
+3. *Modal healthchecking* — describes active healthchecks that take ~1h and require exclusive node access. Those failure modes are *candidates* for passive DCGM aggregates; we have not shown them on our traces (the only DCGM slice here is idle T4 queue-wait).
 
 ## Reading list still-to-consult
 
